@@ -1,0 +1,32 @@
+# Literal modern/science-fiction terms for optional constrained decoding.
+jetpack
+smartphone
+cellphone
+laser rifle
+assault rifle
+machine gun
+sports car
+motorcycle
+helicopter
+airplane
+spaceship
+spacecraft
+laptop
+computer
+internet
+wifi
+television
+digital camera
+GPS
+robot
+android
+nuclear bomb
+power grid
+vending machine
+credit card
+satellite
+drone
+nanobot
+plasma cannon
+quantum computer
+
