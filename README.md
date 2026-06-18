@@ -56,6 +56,10 @@ El QLoRA de 4B suele necesitar aproximadamente 10-14 GB de VRAM con secuencias
 de 2048 tokens. Si falta memoria, reducir `max_seq_length` a 1024 o subir
 `gradient_accumulation_steps`. Las cifras dependen de CUDA, batch y versiones.
 
+También se incluye una variante de 0.5B basada en
+`Qwen/Qwen2.5-0.5B-Instruct`. Con QLoRA suele entrar cómodamente en una GPU de
+6 GB; si falta memoria, bajar los batch sizes de 4 a 1 o 2.
+
 ## Instalación
 
 ```bash
@@ -149,6 +153,29 @@ accelerate launch -m fireball_narrator.training.train_qlora \
   --resume-from-checkpoint outputs/qwen3-4b-fireball-qlora/checkpoint-XXXX
 ```
 
+### Variante Qwen 0.5B
+
+Usa los mismos splits FIREBALL ya preparados. No hace falta volver a descargar
+ni procesar el dataset:
+
+```bash
+bash scripts/train_05b.sh
+```
+
+Equivalente explícito:
+
+```bash
+accelerate launch -m fireball_narrator.training.train_qlora \
+  --config configs/qwen2_5_05b_qlora.yaml
+```
+
+Esta configuración usa `Qwen/Qwen2.5-0.5B-Instruct`, LoRA rank 16, batch
+efectivo 16 y tres épocas. El adapter queda en:
+
+```text
+outputs/qwen2.5-0.5b-fireball-qlora/adapter/
+```
+
 ## 3. Fusionar y exportar a Ollama
 
 Fusionar LoRA con el modelo base:
@@ -166,6 +193,32 @@ Convertir, cuantizar a `Q4_K_M` y crear el modelo Ollama:
 bash scripts/export_to_ollama.sh \
   outputs/qwen3-4b-fireball-merged \
   outputs/gguf
+```
+
+Para fusionar y exportar el modelo de 0.5B:
+
+```bash
+python -m fireball_narrator.training.merge_adapter \
+  --adapter outputs/qwen2.5-0.5b-fireball-qlora/adapter \
+  --output outputs/qwen2.5-0.5b-fireball-merged \
+  --dtype bfloat16
+
+OLLAMA_MODEL_NAME=fireball-narrator-05b \
+bash scripts/export_to_ollama.sh \
+  outputs/qwen2.5-0.5b-fireball-merged \
+  outputs/gguf \
+  fireball-qwen2.5-0.5b
+```
+
+Qwen2.5-0.5B tiene 24 capas. Para steering, empezar con las capas `6,12,18`:
+
+```bash
+python -m fireball_narrator.steering.build_vector \
+  --model Qwen/Qwen2.5-0.5B-Instruct \
+  --adapter outputs/qwen2.5-0.5b-fireball-qlora/adapter \
+  --layers 6,12,18 \
+  --output models/steering/fantasy_direction_05b.pt \
+  --load-in-4bit
 ```
 
 El script descarga `llama.cpp`, compila con CUDA, produce el GGUF y ejecuta:
@@ -308,5 +361,6 @@ python -m compileall src tests
 - [Repositorio FIREBALL](https://github.com/zhudotexe/FIREBALL)
 - [Paper ACL 2023](https://aclanthology.org/2023.acl-long.229/)
 - [Qwen3-4B-Instruct-2507](https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507)
+- [Qwen2.5-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct)
 - [Ollama Modelfile](https://github.com/ollama/ollama/blob/main/docs/modelfile.mdx)
 - [llama.cpp para Qwen](https://qwen.readthedocs.io/en/latest/run_locally/llama.cpp.html)
