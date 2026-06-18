@@ -16,6 +16,7 @@ src/fireball_narrator/data/prepare_fireball.py
 src/fireball_narrator/evaluation/__init__.py
 src/fireball_narrator/evaluation/build_adversarial_set.py
 src/fireball_narrator/evaluation/evaluate_adversarial.py
+src/fireball_narrator/evaluation/evaluate_retention.py
 src/fireball_narrator/evaluation/metrics.py
 src/fireball_narrator/steering/__init__.py
 src/fireball_narrator/steering/build_vector.py
@@ -29,3 +30,4 @@ tests/test_compression.py
 tests/test_decoding.py
 tests/test_formatting.py
 tests/test_metrics.py
+tests/test_retention.py
