@@ -343,6 +343,9 @@ PYTHONPATH=src python -m unittest discover -s tests -v
 python -m compileall src tests
 ```
 
+La secuencia completa para comparar el LoRA de 0.5B antes y después de Caveman
+y steering está en [EVALUATION_05B.md](EVALUATION_05B.md).
+
 ## Limitaciones del dataset
 
 - FIREBALL está principalmente en inglés.
