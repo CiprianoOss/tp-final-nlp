@@ -25,14 +25,14 @@ lora:
 data:
   train_file: data/processed/train.jsonl
   validation_file: data/processed/validation.jsonl
-  max_seq_length: 2048
+  max_seq_length: 1024
 
 training:
   output_dir: outputs/qwen2.5-0.5b-fireball-qlora
-  num_train_epochs: 3
-  per_device_train_batch_size: 4
-  per_device_eval_batch_size: 4
-  gradient_accumulation_steps: 4
+  num_train_epochs: 1
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 16
   learning_rate: 0.0002
   weight_decay: 0.01
   warmup_ratio: 0.03
