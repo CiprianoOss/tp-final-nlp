@@ -48,7 +48,7 @@ def load_model_and_tokenizer(
         low_cpu_mem_usage=True,
     )
     if adapter_path:
-        model = PeftModel.from_pretrained(model, adapter_path)
+        model = PeftModel.from_pretrained(model, str(adapter_path))
     model.eval()
     return model, tokenizer
 
